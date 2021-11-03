@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
+
+from src.sqlite_writer import sql_writer
 from .get_html import get_html
-import os
 import re
-import scraperwiki
 from urllib.parse import urlparse, parse_qs
 
 craftMap = lambda label, value, name : (f'craft{label}', int(value))
@@ -59,18 +59,14 @@ async def process_item_page(session, url):
   title = soup.find('td', class_='tHeader')
   name = title.find('b').string
   rarity = title.contents[1].get_text().strip(' ()')
-  scraperwiki.sql.save(
-    unique_keys=['id'],
-    data=dict(
-      [
-        ('id', int(id)),
-        ('name', name),
-        ('rarity', rarity)
-      ]
-      + get_statistics(soup, name)
-      + get_enhancements(soup, name)
-      + get_craft(soup, name)
-      + get_set(soup, name)
-    ),
-    table_name='data'
+  sql_writer(
+    [
+      ('id', int(id)),
+      ('name', name),
+      ('rarity', rarity)
+    ]
+    + get_statistics(soup, name)
+    + get_enhancements(soup, name)
+    + get_craft(soup, name)
+    + get_set(soup, name)
   )
