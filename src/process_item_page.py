@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from .get_html import get_html
+import os
 import re
 import scraperwiki
 from urllib.parse import urlparse, parse_qs
@@ -58,6 +59,7 @@ async def process_item_page(session, url):
   title = soup.find('td', class_='tHeader')
   name = title.find('b').string
   rarity = title.contents[1].get_text().strip(' ()')
+  print('DATABASE_NAME', os.environ.get("SCRAPERWIKI_DATABASE_NAME", "sqlite:///scraperwiki.sqlite"))
   scraperwiki.sql.save(
     unique_keys=['id'],
     data=dict(

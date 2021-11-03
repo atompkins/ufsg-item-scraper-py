@@ -11,6 +11,6 @@ async def get_items(session, url):
     await get_items(session, anchor.get('href'))
 
 async def init():
-  conn = aiohttp.TCPConnector(limit=25, ttl_dns_cache=3600)
+  conn = aiohttp.TCPConnector(limit=5, ttl_dns_cache=3600)
   async with aiohttp.ClientSession(base_url=baseUrl, connector=conn) as session:
     await get_items(session, begin)
