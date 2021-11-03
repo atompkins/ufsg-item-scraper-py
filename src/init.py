@@ -7,7 +7,7 @@ begin = 'index.php?cmd=items&index=0'
 async def get_items(session, url):
   anchor = await process_index_page(session, url)
   print(anchor.get_text())
-  if anchor.get_text() != 'Last':
+  if anchor.get_text() != '10':
     await get_items(session, anchor.get('href'))
 
 async def init():
