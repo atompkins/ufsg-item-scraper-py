@@ -13,7 +13,15 @@ valOver = lambda b : b.find_parent('td').find_next_sibling('td').find_next_sibli
                       .find_next_sibling('td').get_text()
 valNext = lambda b : b.find_parent('td').find_next_sibling('td').get_text()
 
+rarityRe = re.compile(r'\((.*)\)')
 enhRe = re.compile(r'(\d{1,3})%$')
+
+def getRarity(name, rarityText):
+  m = rarityRe.search(rarityText.strip(' '))
+  if m:
+    return m.group(1)
+  else:
+    print(name, rarityText)
 
 def enhMap(label, value, name):
   m = enhRe.search(value)
@@ -58,7 +66,7 @@ async def process_item_page(session, url):
   id = parse_qs(urlparse(url).query)['item_id'][0]
   title = soup.find('td', class_='tHeader')
   name = title.find('b').string
-  rarity = title.contents[1].get_text().strip(' ()')
+  rarity = getRarity(name, title.contents[1].get_text())
   sql_writer(
     [
       ('id', int(id)),
