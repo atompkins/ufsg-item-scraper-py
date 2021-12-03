@@ -7,7 +7,6 @@ from urllib.parse import urlparse, parse_qs
 
 craftMap = lambda label, value, name : (f'craft{label}', int(value))
 get_label = lambda b : b.get_text().replace(u'\xa0', u'').replace(' ', '').strip(':')
-setMap = lambda label, value, name : (f'set{label}', int(value))
 statMap = lambda label, value, name : (label, value if label == 'Type' else int(value))
 valOver = lambda b : b.find_parent('td').find_next_sibling('td').find_next_sibling('td') \
                       .find_next_sibling('td').get_text()
@@ -15,6 +14,7 @@ valNext = lambda b : b.find_parent('td').find_next_sibling('td').get_text()
 
 rarityRe = re.compile(r'\((.*)\)')
 enhRe = re.compile(r'(\d{1,3})%$')
+setRe = re.compile(r'(\d{1,9})%?$')
 
 def getRarity(name, rarityText):
   m = rarityRe.search(rarityText.strip(' '))
@@ -27,6 +27,13 @@ def enhMap(label, value, name):
   m = enhRe.search(value)
   if m:
     return (label, int(m.group(1)))
+  else:
+    print((name, label, value))
+
+def setMap(label, value, name):
+  m = setRe.search(value)
+  if m:
+    return (f'set{label}', int(m.group(1)))
   else:
     print((name, label, value))
 
