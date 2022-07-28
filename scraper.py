@@ -1,6 +1,7 @@
 import asyncio
 from src.init import init
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(init())
+# loop = asyncio.get_event_loop()
+# loop.run_until_complete(init())
+asyncio.run(init())
 print('Finished...')
